@@ -1,6 +1,7 @@
-import './polyfill'; // load local polyfill files for dev
+// import './polyfill'; // load local polyfill files for dev
 
-// import 'navigator.locks';
+import 'navigator.locks';
+
 import React from 'react';
 
 import ReactDOM from 'react-dom/client';

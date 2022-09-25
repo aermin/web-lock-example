@@ -98,7 +98,10 @@ export default function App() {
   };
 
   return (
-    <div>
+    <>
+      <h2>When the browser your using doesn't support web lock API, then this polyfill will execute.
+        Otherwise, It will just execute the native web lock API</h2>
+      <h3>You could open two tabs in this API unsupported browser to see this demo</h3>
       <button onClick={_createExclusiveLock}>
         request a exclusive locks, lockNumber is {exclusiveLockNumber}
       </button>
@@ -113,8 +116,8 @@ export default function App() {
         <br />
         {queryResult.held?.map((lock) => {
           return (
-            <span key={lock.uuid}>
-              {lock.mode + "  " + lock.uuid}
+            <span>
+              {lock.name + "  " +  lock.mode + "   "+ (lock.uuid || '')}
               <br />
             </span>
           );
@@ -124,13 +127,13 @@ export default function App() {
         <br />
         {queryResult.pending?.map((lock) => {
           return (
-            <span key={lock.uuid}>
-              {lock.mode + "  " + lock.uuid}
+            <span>
+              {lock.name + "  " +  lock.mode + "   "+ (lock.uuid || '')}
               <br />
             </span>
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
