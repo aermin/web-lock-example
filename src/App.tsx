@@ -1,12 +1,17 @@
-// import type { LockManagerSnapshot } from "navigator.locks";
-import './styles.css';
-
-import {
+import React, {
   useEffect,
   useState,
 } from 'react';
 
-import type { LockManagerSnapshot } from './polyfill';
+import type {
+  LockManager,
+  LockManagerSnapshot,
+} from 'navigator.locks';
+
+// import type {
+//   LockManager,
+//   LockManagerSnapshot,
+// } from './polyfill';
 
 function do_something(lockNumber: number, time = 6000) {
   return new Promise((res) => {
@@ -24,19 +29,21 @@ function do_something(lockNumber: number, time = 6000) {
 //   new Promise((resolve) => setTimeout(() => resolve(0), ms));
 
 const createExclusiveLock = async (lockNumber: number) => {
-  (navigator as any).locks.request("resource", async (lock) => {
+  navigator.locks.request("resource", async (lock) => {
     console.log(
       `---exclusive lock whose lockNumber is ${lockNumber}`,
       new Date(),
       lock
     );
     await do_something(lockNumber);
+  }).catch(err => {
+    console.log('ExclusiveLock execute err', err);
   });
   lockNumber++;
 };
 
 async function createSharedLock(lockNumber: number) {
-  (navigator as any).locks.request("resource", { mode: "shared" }, async (lock) => {
+  navigator.locks.request("resource", { mode: "shared" }, async (lock) => {
     console.log(
       `---shared lock whose lockNumber is ${lockNumber}`,
       new Date(),
@@ -48,7 +55,7 @@ async function createSharedLock(lockNumber: number) {
 }
 
 async function createStealLock(lockNumber: number) {
-  (navigator as any).locks.request("resource", { steal: true }, async (lock) => {
+  navigator.locks.request("resource", { steal: true }, async (lock) => {
     console.log(
       `---steal lock whose lockNumber is ${lockNumber}`,
       new Date(),
@@ -67,7 +74,7 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      setQueryResult(await (navigator as any).locks.query());
+      setQueryResult(await (navigator.locks as LockManager).query());
     }, 1000);
     return () => clearInterval(interval);
   }, []);
